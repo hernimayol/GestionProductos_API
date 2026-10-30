@@ -1,0 +1,35 @@
+@ProductosApi_HostAddress = http://localhost:5000
+
+GET {{ProductosApi_HostAddress}}/api/productos
+Accept: application/json
+
+###
+
+GET {{ProductosApi_HostAddress}}/api/productos/1
+Accept: application/json
+
+###
+
+POST {{ProductosApi_HostAddress}}/api/productos
+Content-Type: application/json
+
+{
+  "nombre": "Teclado",
+  "precio": 15000,
+  "categoria": "Periféricos"
+}
+
+###
+
+PUT {{ProductosApi_HostAddress}}/api/productos/1
+Content-Type: application/json
+
+{
+  "nombre": "Teclado mecánico",
+  "precio": 25000,
+  "categoria": "Periféricos"
+}
+
+###
+
+DELETE {{ProductosApi_HostAddress}}/api/productos/1
