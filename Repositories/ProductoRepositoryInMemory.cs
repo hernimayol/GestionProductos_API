@@ -5,27 +5,44 @@ namespace ProductosApi.Repositories;
 public sealed class ProductoRepositoryInMemory : IProductoRepository
 {
     private static readonly object SyncRoot = new();
-    private static readonly List<Producto> Productos = [];
-    private static int _nextId = 1;
-
-    public IReadOnlyList<Producto> GetAll()
-    {
-        lock (SyncRoot)
+    private static readonly List<Producto> Productos =
+    [
+        new Producto
         {
-            return Productos.Select(Copiar).ToList();
-        }
-    }
-
-    public Producto? GetById(int id)
-    {
-        lock (SyncRoot)
+            Id = 1,
+            Nombre = "Yerba mate",
+            Precio = 3200m,
+            Categoria = "Almacén",
+            Activo = true
+        },
+        new Producto
         {
-            var producto = Productos.FirstOrDefault(producto => producto.Id == id);
-            return producto is null ? null : Copiar(producto);
+            Id = 2,
+            Nombre = "Leche entera",
+            Precio = 1400m,
+            Categoria = "Lácteos",
+            Activo = true
+        },
+        new Producto
+        {
+            Id = 3,
+            Nombre = "Jugo de naranja",
+            Precio = 2100m,
+            Categoria = "Bebidas",
+            Activo = true
+        },
+        new Producto
+        {
+            Id = 4,
+            Nombre = "Queso cremoso",
+            Precio = 5800m,
+            Categoria = "Lácteos",
+            Activo = false
         }
-    }
+    ];
+    private static int _nextId = 5;
 
-    public Producto Add(Producto producto)
+    public Producto Agregar(Producto producto)
     {
         lock (SyncRoot)
         {
@@ -36,7 +53,38 @@ public sealed class ProductoRepositoryInMemory : IProductoRepository
         }
     }
 
-    public bool Update(int id, Producto producto)
+    public List<Producto> ObtenerTodos()
+    {
+        lock (SyncRoot)
+        {
+            return Productos.Select(Copiar).ToList();
+        }
+    }
+
+    public Producto? ObtenerPorId(int id)
+    {
+        lock (SyncRoot)
+        {
+            var producto = Productos.FirstOrDefault(producto => producto.Id == id);
+            return producto is null ? null : Copiar(producto);
+        }
+    }
+
+    public List<Producto> BuscarPorCategoria(string categoria)
+    {
+        lock (SyncRoot)
+        {
+            return Productos
+                .Where(producto => string.Equals(
+                    producto.Categoria,
+                    categoria,
+                    StringComparison.OrdinalIgnoreCase))
+                .Select(Copiar)
+                .ToList();
+        }
+    }
+
+    public bool Actualizar(int id, Producto producto)
     {
         lock (SyncRoot)
         {
@@ -53,7 +101,7 @@ public sealed class ProductoRepositoryInMemory : IProductoRepository
         }
     }
 
-    public bool Delete(int id)
+    public bool Eliminar(int id)
     {
         lock (SyncRoot)
         {

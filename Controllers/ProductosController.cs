@@ -9,45 +9,49 @@ namespace ProductosApi.Controllers;
 public sealed class ProductosController(IProductoService productoService) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(IReadOnlyList<ProductoDto>), StatusCodes.Status200OK, "application/json")]
-    public IActionResult GetAll()
+    [ProducesResponseType(typeof(List<ProductoDto>), StatusCodes.Status200OK, "application/json")]
+    public IActionResult ObtenerTodos([FromQuery] string? categoria)
     {
-        return Ok(productoService.GetAll());
+        var productos = string.IsNullOrWhiteSpace(categoria)
+            ? productoService.ObtenerTodos()
+            : productoService.BuscarPorCategoria(categoria.Trim());
+
+        return Ok(productos);
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ProductoDto), StatusCodes.Status200OK, "application/json")]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public IActionResult GetById(int id)
+    public IActionResult ObtenerPorId(int id)
     {
-        var producto = productoService.GetById(id);
+        var producto = productoService.ObtenerPorId(id);
         return producto is null ? NotFound() : Ok(producto);
     }
 
     [HttpPost]
     [ProducesResponseType(typeof(ProductoDto), StatusCodes.Status201Created, "application/json")]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, "application/problem+json")]
-    public IActionResult Create([FromBody] CreateProductoDto productoDto)
+    public IActionResult Agregar([FromBody] CreateProductoDto productoDto)
     {
-        var producto = productoService.Create(productoDto);
-        return CreatedAtAction(nameof(GetById), new { id = producto.Id }, producto);
+        var producto = productoService.Agregar(productoDto);
+        return CreatedAtAction(nameof(ObtenerPorId), new { id = producto.Id }, producto);
     }
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(ProductoDto), StatusCodes.Status200OK, "application/json")]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, "application/problem+json")]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public IActionResult Update(int id, [FromBody] CreateProductoDto productoDto)
+    public IActionResult Actualizar(int id, [FromBody] CreateProductoDto productoDto)
     {
-        var producto = productoService.Update(id, productoDto);
+        var producto = productoService.Actualizar(id, productoDto);
         return producto is null ? NotFound() : Ok(producto);
     }
 
     [HttpDelete("{id:int}")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public IActionResult Delete(int id)
+    public IActionResult Eliminar(int id)
     {
-        return productoService.Delete(id) ? NoContent() : NotFound();
+        return productoService.Eliminar(id) ? NoContent() : NotFound();
     }
 }

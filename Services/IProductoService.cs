@@ -4,9 +4,10 @@ namespace ProductosApi.Services;
 
 public interface IProductoService
 {
-    IReadOnlyList<ProductoDto> GetAll();
-    ProductoDto? GetById(int id);
-    ProductoDto Create(CreateProductoDto productoDto);
-    ProductoDto? Update(int id, CreateProductoDto productoDto);
-    bool Delete(int id);
+    List<ProductoDto> ObtenerTodos();
+    ProductoDto? ObtenerPorId(int id);
+    List<ProductoDto> BuscarPorCategoria(string categoria);
+    ProductoDto Agregar(CreateProductoDto productoDto);
+    ProductoDto? Actualizar(int id, CreateProductoDto productoDto);
+    bool Eliminar(int id);
 }

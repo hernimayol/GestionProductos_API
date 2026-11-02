@@ -26,7 +26,7 @@ Swagger UI y el documento OpenAPI se habilitan en el entorno `Development`, que 
 
 | Método | Ruta | Respuesta |
 |---|---|---|
-| GET | `/api/productos` | `200 OK` |
+| GET | `/api/productos` (admite `?categoria=`) | `200 OK` |
 | GET | `/api/productos/{id}` | `200 OK` o `404 Not Found` |
 | POST | `/api/productos` | `201 Created` o `400 Bad Request` |
 | PUT | `/api/productos/{id}` | `200 OK`, `404 Not Found` o `400 Bad Request` |
@@ -36,12 +36,14 @@ El cuerpo de POST y PUT usa `CreateProductoDto`:
 
 ```json
 {
-  "nombre": "Teclado",
-  "precio": 15000,
-  "categoria": "Periféricos"
+  "nombre": "Galletitas de agua",
+  "precio": 1800,
+  "categoria": "Almacén"
 }
 ```
 
-El nombre debe tener entre 3 y 100 caracteres y el precio debe ser mayor que cero. Los DTOs de respuesta incluyen el ID y el estado `activo`; los controladores no exponen la entidad de dominio.
+El nombre debe tener entre 3 y 100 caracteres y el precio debe ser mayor que cero. Los espacios al inicio y al final del nombre y la categoría se descartan. Los productos nuevos se crean activos y la edición conserva su estado. Los DTOs de respuesta incluyen el ID y el estado `activo`; los controladores no exponen la entidad de dominio.
 
-Los datos se guardan en memoria y se pierden al detener la aplicación. El repositorio conserva una lista compartida para que los productos permanezcan disponibles entre solicitudes HTTP, aunque su ciclo de vida sea `Scoped`.
+El filtro `categoria` no distingue mayúsculas de minúsculas y devuelve una lista vacía si no hay coincidencias.
+
+Los datos se guardan en memoria y se pierden al detener la aplicación. La API inicia con el mismo catálogo de cuatro productos del proyecto de consola. El repositorio conserva una lista compartida para que los productos permanezcan disponibles entre solicitudes HTTP, aunque su ciclo de vida sea `Scoped`.

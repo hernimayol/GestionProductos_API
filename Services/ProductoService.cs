@@ -6,18 +6,23 @@ namespace ProductosApi.Services;
 
 public sealed class ProductoService(IProductoRepository productoRepository) : IProductoService
 {
-    public IReadOnlyList<ProductoDto> GetAll()
+    public List<ProductoDto> ObtenerTodos()
     {
-        return productoRepository.GetAll().Select(ToDto).ToList();
+        return productoRepository.ObtenerTodos().Select(ToDto).ToList();
     }
 
-    public ProductoDto? GetById(int id)
+    public ProductoDto? ObtenerPorId(int id)
     {
-        var producto = productoRepository.GetById(id);
+        var producto = productoRepository.ObtenerPorId(id);
         return producto is null ? null : ToDto(producto);
     }
 
-    public ProductoDto Create(CreateProductoDto productoDto)
+    public List<ProductoDto> BuscarPorCategoria(string categoria)
+    {
+        return productoRepository.BuscarPorCategoria(categoria).Select(ToDto).ToList();
+    }
+
+    public ProductoDto Agregar(CreateProductoDto productoDto)
     {
         var producto = new Producto
         {
@@ -27,12 +32,12 @@ public sealed class ProductoService(IProductoRepository productoRepository) : IP
             Activo = true
         };
 
-        return ToDto(productoRepository.Add(producto));
+        return ToDto(productoRepository.Agregar(producto));
     }
 
-    public ProductoDto? Update(int id, CreateProductoDto productoDto)
+    public ProductoDto? Actualizar(int id, CreateProductoDto productoDto)
     {
-        var productoExistente = productoRepository.GetById(id);
+        var productoExistente = productoRepository.ObtenerPorId(id);
         if (productoExistente is null)
         {
             return null;
@@ -47,14 +52,14 @@ public sealed class ProductoService(IProductoRepository productoRepository) : IP
             Activo = productoExistente.Activo
         };
 
-        return productoRepository.Update(id, productoActualizado)
+        return productoRepository.Actualizar(id, productoActualizado)
             ? ToDto(productoActualizado)
             : null;
     }
 
-    public bool Delete(int id)
+    public bool Eliminar(int id)
     {
-        return productoRepository.Delete(id);
+        return productoRepository.Eliminar(id);
     }
 
     private static ProductoDto ToDto(Producto producto)

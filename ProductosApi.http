@@ -5,6 +5,11 @@ Accept: application/json
 
 ###
 
+GET {{ProductosApi_HostAddress}}/api/productos?categoria=lácteos
+Accept: application/json
+
+###
+
 GET {{ProductosApi_HostAddress}}/api/productos/1
 Accept: application/json
 
@@ -14,9 +19,9 @@ POST {{ProductosApi_HostAddress}}/api/productos
 Content-Type: application/json
 
 {
-  "nombre": "Teclado",
-  "precio": 15000,
-  "categoria": "Periféricos"
+  "nombre": "Galletitas de agua",
+  "precio": 1800,
+  "categoria": "Almacén"
 }
 
 ###
@@ -25,9 +30,9 @@ PUT {{ProductosApi_HostAddress}}/api/productos/1
 Content-Type: application/json
 
 {
-  "nombre": "Teclado mecánico",
-  "precio": 25000,
-  "categoria": "Periféricos"
+  "nombre": "Yerba mate suave",
+  "precio": 3500,
+  "categoria": "Almacén"
 }
 
 ###
